@@ -4,9 +4,11 @@ using namespace std;
 
 int EDGE;
 int MINES;
+vector<pair<int, int> > mine_loc;
+int win_count;
+int counting = 0;
 int dx[] = {1, 0, -1, -1, -1, 0, 1, 1};
 int dy[] = {1, 1, 1, 0, -1, -1, -1, 0};
-vector<pair<int, int> > mine_loc;
 
 char** ACTUAL_BOARD;
 char** GUESS_BOARD;
@@ -24,14 +26,17 @@ void init(){
     switch (level){
     case 2:
         MINES = 40;
+        win_count = 216;
         EDGE = 16;
         break;
     case 3:
         MINES = 100;
+        win_count = 525;
         EDGE = 25;
         break;
     default:
         MINES = 12;
+        win_count = 69;
         EDGE = 9;
         break;
     }
@@ -99,8 +104,6 @@ void print_board(char** board){
 
 
 int count_adjacent_mines(int r, int c){
-    
-
     int adj_mine_count = 0;
     for (int i=0; i<8; ++i){
         if (is_valid(r+dx[i], c+dy[i]) && is_mine(r+dx[i], c+dy[i]))
@@ -127,12 +130,14 @@ void reveal_cell(int r, int c){
     int count = count_adjacent_mines(r, c);
     GUESS_BOARD[r][c] = '0' + count;
 
-    if (count != 0){
+    if (count == 0){
         for (int i=0; i<8; ++i){
             int new_r = r + dx[i];
             int new_c = c + dy[i];
-            if (is_valid(new_r, new_c) && !is_mine(new_r, new_c))
+            if (is_valid(new_r, new_c) && !is_mine(new_r, new_c)){
                 reveal_cell(new_r, new_c);
+                counting++;
+            }
         }
     }
     return;
@@ -145,8 +150,21 @@ int main(){
     init();
     mine_generate();
     print_board(ACTUAL_BOARD);
-    reveal_cell(5, 2);
-    print_board(GUESS_BOARD);
+
+
+    int count = 0;
+    while (true){
+        print_board(GUESS_BOARD);
+        int r, c;
+        cout << "Input a gird: ";
+        cin >> r >> c;
+        reveal_cell(r, c);
+        if (counting == win_count-1){
+            cout << "You win!\n";
+            break;
+        }
+    }
+
 
     return 0;
 }
