@@ -5,6 +5,7 @@ using namespace std;
 int EDGE, MINES;
 bool KABOOM = false;
 
+vector<pair<int, int> > find_all;
 vector<pair<int, int> > mine_loc;
 int dx[] = {1, 0, -1, -1, -1, 0, 1, 1};
 int dy[] = {1, 1, 1, 0, -1, -1, -1, 0};
@@ -30,6 +31,10 @@ void init(){
     case 3:
         MINES = 100;
         EDGE = 25;
+        break;
+    case 100:
+        MINES = 3;
+        EDGE = 4;
         break;
     default:
         MINES = 12;
@@ -91,20 +96,9 @@ bool is_valid(int r, int c){
 void print_board(char** board){
     // printing row index
     cout << "  ";
-    for (int i=0; i<EDGE; ++i){
+    for (int i=0; i<EDGE; ++i)
         printf("%2d ", i);
-    }
-
-    
     cout << endl;
-
-    // printing splitting line
-    // printf("-----");
-    // for (int i=1; i<EDGE; ++i)
-    //     printf("----");
-    // printf("--");
-    // cout << endl;
-    
 
     for (int i=0; i<EDGE; ++i){
         printf("%2d", i);
@@ -112,8 +106,6 @@ void print_board(char** board){
             printf("%2c ", board[i][j]);
         }
         cout << endl;
-
-
     }
     cout << endl;
 }
@@ -163,24 +155,42 @@ void reveal_cell(int r, int c){
 
 
 void flag(int r, int c){
+    pair<int, int> tmp = make_pair(r, c);
     if (GUESS_BOARD[r][c] == '#'){
         GUESS_BOARD[r][c] = 'F';
+        find_all.push_back(tmp);
         return;
     }
     if (GUESS_BOARD[r][c] == 'F')
         GUESS_BOARD[r][c] = '#';
+        find_all.erase(remove(find_all.begin(), find_all.end(), make_pair(r, c)), find_all.end());
 }
 
 
-int main(){
+bool check_find_all(){
+    if (find_all.size() != MINES)
+        return false;
 
-    init();
-    mine_generate();
-    // print_board(ACTUAL_BOARD);
+    for (auto itr: find_all){
+        if (is_mine(itr.first, itr.second))
+            continue;
+        return false;
+    }
+    return true;
+}
 
+
+
+void run_mine_sweeper(){
     while (true){
-        print_board(GUESS_BOARD);
         int r, c;
+        print_board(GUESS_BOARD);
+        
+        if (check_find_all() == true){
+            cout << "You win !\n";
+            break;
+        }  
+
         cout << "Input a gird (enter -1, -1 for flag): ";
         cin >> r >> c;
         if (r != -1 && c != -1){
@@ -189,20 +199,20 @@ int main(){
                 cout << "You lost!\n";
                 break;
             }
-
-
-            // if (counting == win_count){
-            //     cout << "You win!\n";
-            //     break;
-            // }
         }
         else{
             cout << "Input flag location: ";
             cin >> r >> c;
             flag(r, c);
-        }
+        }     
     }
+}
 
 
+
+int main(){
+    init();
+    mine_generate();
+    run_mine_sweeper();
     return 0;
 }
