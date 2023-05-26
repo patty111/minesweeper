@@ -2,11 +2,10 @@
 #include <random>
 using namespace std;
 
-int EDGE;
-int MINES;
+int EDGE, MINES;
+bool KABOOM = false;
+
 vector<pair<int, int> > mine_loc;
-int win_count;
-int counting = 0;
 int dx[] = {1, 0, -1, -1, -1, 0, 1, 1};
 int dy[] = {1, 1, 1, 0, -1, -1, -1, 0};
 
@@ -26,17 +25,14 @@ void init(){
     switch (level){
     case 2:
         MINES = 40;
-        win_count = 216;
         EDGE = 16;
         break;
     case 3:
         MINES = 100;
-        win_count = 525;
         EDGE = 25;
         break;
     default:
         MINES = 12;
-        win_count = 69;
         EDGE = 9;
         break;
     }
@@ -46,7 +42,7 @@ void init(){
     for (int i=0; i<EDGE; ++i){
         ACTUAL_BOARD[i] = new char[EDGE];
         for (int j=0; j<EDGE; ++j)
-            ACTUAL_BOARD[i][j] = '-';
+            ACTUAL_BOARD[i][j] = '#';
     }
 
 
@@ -54,7 +50,7 @@ void init(){
     for (int i=0; i<EDGE; ++i){
         GUESS_BOARD[i] = new char[EDGE];
         for (int j=0; j<EDGE; ++j){
-            GUESS_BOARD[i][j] = '-';
+            GUESS_BOARD[i][j] = '#';
         }
     }
 }
@@ -71,7 +67,7 @@ void mine_generate(){
         int y = dis(gen);
         mine_loc.push_back(make_pair(x, y));
 
-        if (ACTUAL_BOARD[x][y] == '-'){
+        if (ACTUAL_BOARD[x][y] == '#'){
             ACTUAL_BOARD[x][y] = '*';
             ++placed;
         }
@@ -93,13 +89,33 @@ bool is_valid(int r, int c){
 
 
 void print_board(char** board){
+    // printing row index
+    cout << "  ";
     for (int i=0; i<EDGE; ++i){
+        printf("%2d ", i);
+    }
+
+    
+    cout << endl;
+
+    // printing splitting line
+    // printf("-----");
+    // for (int i=1; i<EDGE; ++i)
+    //     printf("----");
+    // printf("--");
+    // cout << endl;
+    
+
+    for (int i=0; i<EDGE; ++i){
+        printf("%2d", i);
         for (int j=0; j<EDGE; ++j){
-            cout << board[i][j] << " ";
+            printf("%2c ", board[i][j]);
         }
         cout << endl;
+
+
     }
-    cout << endl << endl;
+    cout << endl;
 }
 
 
@@ -114,16 +130,19 @@ int count_adjacent_mines(int r, int c){
 
 
 void reveal_mines(){
-    
+    for (auto itr: mine_loc){
+        GUESS_BOARD[itr.first][itr.second] = '*';
+    }
+    print_board(GUESS_BOARD);
 }
 
 // recursively check adjacent cells whether should reveal
 void reveal_cell(int r, int c){
-    if (GUESS_BOARD[r][c] != '-')
+    if (GUESS_BOARD[r][c] != '#' || KABOOM)
         return;
     if (ACTUAL_BOARD[r][c] == '*'){
         reveal_mines();
-        cout << "You lost!\n";
+        KABOOM = true;
         return;
     }
 
@@ -136,7 +155,6 @@ void reveal_cell(int r, int c){
             int new_c = c + dy[i];
             if (is_valid(new_r, new_c) && !is_mine(new_r, new_c)){
                 reveal_cell(new_r, new_c);
-                counting++;
             }
         }
     }
@@ -144,24 +162,44 @@ void reveal_cell(int r, int c){
 } 
 
 
+void flag(int r, int c){
+    if (GUESS_BOARD[r][c] == '#'){
+        GUESS_BOARD[r][c] = 'F';
+        return;
+    }
+    if (GUESS_BOARD[r][c] == 'F')
+        GUESS_BOARD[r][c] = '#';
+}
+
 
 int main(){
 
     init();
     mine_generate();
-    print_board(ACTUAL_BOARD);
+    // print_board(ACTUAL_BOARD);
 
-
-    int count = 0;
     while (true){
         print_board(GUESS_BOARD);
         int r, c;
-        cout << "Input a gird: ";
+        cout << "Input a gird (enter -1, -1 for flag): ";
         cin >> r >> c;
-        reveal_cell(r, c);
-        if (counting == win_count-1){
-            cout << "You win!\n";
-            break;
+        if (r != -1 && c != -1){
+            reveal_cell(r, c);
+            if (KABOOM){
+                cout << "You lost!\n";
+                break;
+            }
+
+
+            // if (counting == win_count){
+            //     cout << "You win!\n";
+            //     break;
+            // }
+        }
+        else{
+            cout << "Input flag location: ";
+            cin >> r >> c;
+            flag(r, c);
         }
     }
 
