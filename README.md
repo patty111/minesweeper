@@ -1,2 +1,2 @@
 # Mine Sweeper
-A easy little game to practice c++
+An easy little game to practice c++
