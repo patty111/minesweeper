@@ -42,19 +42,19 @@ void init(){
 
     switch (level){
     case 2:
-        MINES = 40;
+        MINES = 38;
         EDGE = 16;
         break;
     case 3:
-        MINES = 100;
+        MINES = 95;
         EDGE = 25;
         break;
     case 100:
-        MINES = 3;
+        MINES = 1;
         EDGE = 4;
         break;
     default:
-        MINES = 12;
+        MINES = 11;
         EDGE = 9;
         break;
     }
