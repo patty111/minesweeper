@@ -1,6 +1,22 @@
 #include <iostream>
 #include <random>
+#include <algorithm>
 using namespace std;
+
+#define BLUE1 "\033[38;5;12m"
+#define GREEN2 "\033[38;5;82m"
+#define RED3 "\033[38;5;196m"
+#define DARK_BLUE4 "\033[38;5;21m"
+#define BROWN5 "\033[38;5;88m"
+#define CYAN6 "\033[38;5;14m"
+#define BLACK7 "\033[38;5;16m"
+#define GREY8 "\033[38;5;247m"
+
+#define FLAG "\033[38;5;226m"
+#define MINE "\033[38;5;207m"
+#define RESET "\033[0m"
+#define BACKGROUND "\033[48;5;236m"
+
 
 int EDGE, MINES;
 bool KABOOM = false;
@@ -103,11 +119,50 @@ void print_board(char** board){
     for (int i=0; i<EDGE; ++i){
         printf("%2d", i);
         for (int j=0; j<EDGE; ++j){
+            switch (board[i][j])
+            {
+            case 'F':
+                cout << FLAG;
+                break;
+            case '*':
+                cout << MINE;
+                break;
+            case '1':
+                cout << BLUE1;
+                break;
+            case '2':
+                cout << GREEN2;
+                break;
+            case '3':
+                cout << RED3;
+                break;
+            case '4':
+                cout << DARK_BLUE4;
+                break;
+            case '5':
+                cout << BROWN5;
+                break;
+            case '6':
+                cout << CYAN6;
+                break;
+            case '7':
+                cout << BLACK7;
+                break;
+            case '8':
+                cout << GREY8;
+                break;
+            default:
+                break;
+            }
+
+            cout << BACKGROUND;
             printf("%2c ", board[i][j]);
+            cout << RESET;
         }
         cout << endl;
     }
-    cout << endl;
+    cout << "       " << MINES - find_all.size() << " left.";
+    cout << endl << endl;
 }
 
 
@@ -139,7 +194,8 @@ void reveal_cell(int r, int c){
     }
 
     int count = count_adjacent_mines(r, c);
-    GUESS_BOARD[r][c] = '0' + count;
+    GUESS_BOARD[r][c] = count != 0 ? '0' + count : ' ';
+    
 
     if (count == 0){
         for (int i=0; i<8; ++i){
@@ -161,9 +217,13 @@ void flag(int r, int c){
         find_all.push_back(tmp);
         return;
     }
-    if (GUESS_BOARD[r][c] == 'F')
+    if (GUESS_BOARD[r][c] == 'F') {
         GUESS_BOARD[r][c] = '#';
-        find_all.erase(remove(find_all.begin(), find_all.end(), make_pair(r, c)), find_all.end());
+        auto it = std::find(find_all.begin(), find_all.end(), tmp);
+        if (it != find_all.end()) {
+            find_all.erase(it);
+        }
+    }
 }
 
 
@@ -187,7 +247,7 @@ void run_mine_sweeper(){
         print_board(GUESS_BOARD);
         
         if (check_find_all() == true){
-            cout << "You win !\n";
+            cout << "\033[48;5;42m" << "You win !" << RESET << endl;
             break;
         }  
 
@@ -196,7 +256,7 @@ void run_mine_sweeper(){
         if (r != -1 && c != -1){
             reveal_cell(r, c);
             if (KABOOM){
-                cout << "You lost!\n";
+                cout << "\033[48;5;200m" << "You lost!" << RESET << endl;
                 break;
             }
         }
