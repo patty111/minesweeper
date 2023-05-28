@@ -161,7 +161,7 @@ void print_board(char** board){
         }
         cout << endl;
     }
-    cout << "       " << MINES - find_all.size() << " left.";
+    cout << "    " << MINES - find_all.size() << " left.";
     cout << endl << endl;
 }
 
