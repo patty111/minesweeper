@@ -5,9 +5,11 @@ An easy little game to practice c++ and ansi escape
    
 ![](images/start.png)
 ---
-2. Using ansi escape, input -1 -1 for flagging
+2. Using ansi escape, input -1 -1 for flagging  
 ![](images/show_color.png)  
+---
 3. Lose when you open a mine
 ![](images/lose.png)
+---
 4. Flag all mines correctly to win the game  
-5. ![](images/win.png)
+![](images/win.png)

@@ -3,6 +3,7 @@
 #include <algorithm>
 using namespace std;
 
+// ansi escape
 #define BLUE1 "\033[38;5;12m"
 #define GREEN2 "\033[38;5;82m"
 #define RED3 "\033[38;5;196m"
@@ -119,8 +120,7 @@ void print_board(char** board){
     for (int i=0; i<EDGE; ++i){
         printf("%2d", i);
         for (int j=0; j<EDGE; ++j){
-            switch (board[i][j])
-            {
+            switch (board[i][j]){
             case 'F':
                 cout << FLAG;
                 break;
@@ -161,7 +161,7 @@ void print_board(char** board){
         }
         cout << endl;
     }
-    cout << "    " << MINES - find_all.size() << " left.";
+    cout << "    " << MINES - find_all.size() << " left";
     cout << endl << endl;
 }
 
