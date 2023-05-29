@@ -1,15 +1,26 @@
-# Colorful Mine Sweeper
-An easy little game to practice c++ and ansi escape
 
+# Clickable Minesweeper
+**An easy little game to practice c++ and ansi escape**  
+> Using only ANSI escape, no ncurses.  
+Works on Linux system, some OS or CLI doesn't support listening to mouse click events  
+#### TODO 
+* Fix the input issue, currently it only works on minefield smaller than $9 * 9$.
+
+* After every click you need to press enter. I will fix this if i have time
+* Modify the ouput so it won't need to print the minefield during every loop
+
+![game running](screenshots/clickable.gif)
+# Colorful Mine Sweeper
 1. Choose difficulty and start the game  
    
-![](images/start.png)
+![](screenshots/start.png)
 ---
 2. Using ansi escape, input -1 -1 for flagging  
-![](images/show_color.png)  
+![](screenshots/show_color.png)  
 ---
 3. Lose when you open a mine  
-![](images/lose.png)
+![](screenshots/lose.png)
 ---
 4. Flag all mines correctly to win the game  
-![](images/win.png)
+![](screenshots/win.png)
+

@@ -1,5 +1,5 @@
-*.out
-*.exe
+a.out
+a.exe
 .DS_Store
 .vscode
 test.*

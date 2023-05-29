@@ -242,9 +242,9 @@ bool check_find_all(){
 
 
 void run_mine_sweeper(){
+    print_board(GUESS_BOARD);
     while (true){
         int r, c;
-        print_board(GUESS_BOARD);
         
         if (check_find_all() == true){
             cout << "\033[48;5;42m" << "You win !" << RESET << endl;
@@ -253,21 +253,23 @@ void run_mine_sweeper(){
 
         cout << "Input a gird (enter -1, -1 for flag): ";
         cin >> r >> c;
-        if (r != -1 && c != -1){
+        if (r == -1 && c == -1){
+            cout << "Input flag location: ";
+            cin >> r >> c;
+            flag(r, c);
+        }
+        else if (r >= 0 && c >= 0 && r <= EDGE-1 && c <= EDGE-1){
             reveal_cell(r, c);
             if (KABOOM){
                 cout << "\033[48;5;200m" << "You lost!" << RESET << endl;
                 break;
             }
         }
-        else{
-            cout << "Input flag location: ";
-            cin >> r >> c;
-            flag(r, c);
-        }     
+        else
+            continue;
+        print_board(GUESS_BOARD);
     }
 }
-
 
 
 int main(){
