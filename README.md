@@ -8,6 +8,9 @@ Works on Linux system, some OS or CLI doesn't support listening to mouse click e
 
 * After every click you need to press enter. I will fix this if i have time
 * Modify the ouput so it won't need to print the minefield during every loop
+---  
+Left click on grid to reveal.  
+Right click on grid to set flag, click on existing flag to disable it.
 
 ![game running](screenshots/clickable.gif)
 # Colorful Mine Sweeper
