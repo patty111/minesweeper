@@ -1,6 +1,6 @@
 
 # Clickable Minesweeper
-![further explain](https://medium.com/@smefyb/clickable-minesweeper-game-a19dc2e1db64)
+[Further explain](https://medium.com/@smefyb/clickable-minesweeper-game-a19dc2e1db64)  
 **An easy little game to practice c++ and ansi escape**  
 > Using only ANSI escape, no ncurses.  
 Works on Linux system, some OS or CLI doesn't support listening to mouse click events  
