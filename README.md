@@ -6,9 +6,9 @@
 Works on Linux system, some OS or CLI doesn't support listening to mouse click events  
 #### TODO 
 * Fix the input issue, currently it only works on minefield smaller than $9 * 9$.
-
+* Add some decorations
 <!--fixed:   * After every click you need to press enter. I will fix this if i have time--> 
-* Modify the ouput so it won't need to print the minefield during every loop
+<!--fixed: * Modify the ouput so it won't need to print the minefield during every loop -->
 ---  
 Left click on grid to reveal.  
 Right click on grid to set flag, click on existing flag to disable it.
