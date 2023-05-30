@@ -1,7 +1,8 @@
 #include <iostream>
+#include <stdio.h>
 #include <algorithm>
 #include <random>
-#include <stdio.h>
+#include <unistd.h>
 #include <termios.h>
 using namespace std;
 
@@ -36,13 +37,24 @@ void enableTerminalEcho(bool enable) {
     struct termios term;
     tcgetattr(fileno(stdin), &term);
 
-    if (enable) {
+    if (enable)
         term.c_lflag |= ECHO;
-    } else {
+    else
         term.c_lflag &= ~ECHO;
-    }
 
     tcsetattr(fileno(stdin), TCSANOW, &term);
+}
+
+void enableICANON(bool enable) {
+    struct termios term;
+    tcgetattr(STDIN_FILENO, &term);
+
+    if (enable)
+        term.c_lflag |= ICANON;
+    else
+        term.c_lflag &= ~ICANON;
+
+    tcsetattr(STDIN_FILENO, TCSANOW, &term);
 }
 
 
@@ -253,10 +265,11 @@ void run_mine_sweeper(){
     printf("\033[?1000h"); // disable mouse support
     print_board(GUESS_BOARD);
 
+    enableICANON(false);
     while (true){
         enableTerminalEcho(false);
 
-        char input[32];
+        char input[7];
         fgets(input, sizeof(input), stdin); // read input from stdin
         
         if (check_find_all() == true){
@@ -290,6 +303,7 @@ void run_mine_sweeper(){
         enableTerminalEcho(true);
         print_board(GUESS_BOARD);
     }
+    enableICANON(true);
 }
 
 
