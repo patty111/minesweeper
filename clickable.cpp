@@ -284,9 +284,11 @@ void run_mine_sweeper(){
 
             button = input[3] - ' ';
             col = (int)((input[4] - ' ' - 1) / 2);
-            row = input[5] - ' ' - 1 - EDGE - 3; // minus the edge and the \n for foramtting
+            // row = input[5] - ' ' - 1 - EDGE - 3; // minus the edge and the \n for foramtting
+            row = input[5] - ' ' - 1 - 2; // minus the edge and the \n for foramtting
             // cout << "row: " << row << " col:" << col << endl;
         }
+
         if (button == 2){    // if press right mouse, set flag
             flag(row, col);
         }
@@ -309,6 +311,7 @@ void run_mine_sweeper(){
 
 
 int main(){
+    printf("\033[8;14;60t");   //fix terminal height
     init();
     mine_generate();
     run_mine_sweeper();
