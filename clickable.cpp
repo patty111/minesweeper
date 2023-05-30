@@ -310,7 +310,7 @@ void run_mine_sweeper(){
         if (button == 2){    // if press right mouse, set flag
             flag(row, col);
         }
-        else if (row >= 0 && col >= 0 && row <= EDGE-1 && col <= EDGE-1){
+        else if (button == 0 && row >= 0 && col >= 0 && row <= EDGE-1 && col <= EDGE-1){
             reveal_cell(row, col);
             if (KABOOM){
                 moveCursor(EDGE + 6, 0);
