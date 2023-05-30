@@ -58,7 +58,13 @@ void enableICANON(bool enable) {
 }
 
 
+void moveCursor(int row, int col) {
+    std::cout << "\033[" << row+2 << ";" << col*2+1 << "H";
+}
+
 void init(){
+    printf("\033[8;14;60t");   // fix terminal height
+    
     int level;
     cout << "Choose the Difficulty:\n";
     cout << "1 for EASY (9 * 9 map and 12 mines)\n";
@@ -137,53 +143,62 @@ bool is_valid(int r, int c){
 }
 
 
-void print_board(char** board){
+void init_board(char** board){
+    cout << endl;
     for (int i=0; i<EDGE; ++i){
-        // printf("%2d", i);
         for (int j=0; j<EDGE; ++j){
-            switch (board[i][j]){
-            case 'F':
-                cout << FLAG;
-                break;
-            case '*':
-                cout << MINE;
-                break;
-            case '1':
-                cout << BLUE1;
-                break;
-            case '2':
-                cout << GREEN2;
-                break;
-            case '3':
-                cout << RED3;
-                break;
-            case '4':
-                cout << DARK_BLUE4;
-                break;
-            case '5':
-                cout << BROWN5;
-                break;
-            case '6':
-                cout << CYAN6;
-                break;
-            case '7':
-                cout << BLACK7;
-                break;
-            case '8':
-                cout << GREY8;
-                break;
-            default:
-                break;
-            }
-
             cout << BACKGROUND;
             printf("%c ", board[i][j]);
-            cout << COLOR_RESET;
         }
+        cout << COLOR_RESET;
         cout << endl;
     }
     cout << "    " << MINES - find_all.size() << " left";
     cout << endl << endl;
+}
+
+
+void print_cell(int r, int c){
+    switch (GUESS_BOARD[r][c]){
+        case 'F':
+            cout << FLAG;
+            break;
+        case '*':
+            cout << MINE;
+            break;
+        case '1':
+            cout << BLUE1;
+            break;
+        case '2':
+            cout << GREEN2;
+            break;
+        case '3':
+            cout << RED3;
+            break;
+        case '4':
+            cout << DARK_BLUE4;
+            break;
+        case '5':
+            cout << BROWN5;
+            break;
+        case '6':
+            cout << CYAN6;
+            break;
+        case '7':
+            cout << BLACK7;
+            break;
+        case '8':
+            cout << GREY8;
+            break;
+        default:
+            break;
+    }
+
+    moveCursor(r, c);  // Move cursor to the flagged cell
+
+    printf(BACKGROUND);
+    printf("%c", GUESS_BOARD[r][c]);  // Output the updated cell content
+    printf(COLOR_RESET);
 }
 
 
@@ -200,15 +215,16 @@ int count_adjacent_mines(int r, int c){
 void reveal_mines(){
     for (auto itr: mine_loc){
         GUESS_BOARD[itr.first][itr.second] = '*';
+        print_cell(itr.first, itr.second);
     }
-    print_board(GUESS_BOARD);
 }
 
 // recursively check adjacent cells whether should reveal
-void reveal_cell(int r, int c){
+void reveal_cell(int r, int c) {
     if (GUESS_BOARD[r][c] != '#' || KABOOM)
         return;
-    if (ACTUAL_BOARD[r][c] == '*'){
+
+    if (ACTUAL_BOARD[r][c] == '*') {
         reveal_mines();
         KABOOM = true;
         return;
@@ -216,25 +232,26 @@ void reveal_cell(int r, int c){
 
     int count = count_adjacent_mines(r, c);
     GUESS_BOARD[r][c] = count != 0 ? '0' + count : ' ';
-    
 
-    if (count == 0){
-        for (int i=0; i<8; ++i){
+    print_cell(r, c);
+
+    if (count == 0) {
+        for (int i = 0; i < 8; ++i) {
             int new_r = r + dx[i];
             int new_c = c + dy[i];
             if (is_valid(new_r, new_c) && !is_mine(new_r, new_c))
                 reveal_cell(new_r, new_c);
         }
     }
-    return;
-} 
+}
 
 
-void flag(int r, int c){
+void flag(int r, int c) {
     pair<int, int> tmp = make_pair(r, c);
-    if (GUESS_BOARD[r][c] == '#'){
+    if (GUESS_BOARD[r][c] == '#') {
         GUESS_BOARD[r][c] = 'F';
         find_all.push_back(tmp);
+        print_cell(r, c);
         return;
     }
     if (GUESS_BOARD[r][c] == 'F') {
@@ -243,8 +260,10 @@ void flag(int r, int c){
         if (it != find_all.end()) {
             find_all.erase(it);
         }
+        print_cell(r, c);
     }
 }
+
 
 
 bool check_find_all(){
@@ -262,8 +281,7 @@ bool check_find_all(){
 
 
 void run_mine_sweeper(){
-    printf("\033[?1000h"); // disable mouse support
-    print_board(GUESS_BOARD);
+    printf("\033[?1000h"); // enable mouse support
 
     enableICANON(false);
     while (true){
@@ -273,6 +291,7 @@ void run_mine_sweeper(){
         fgets(input, sizeof(input), stdin); // read input from stdin
         
         if (check_find_all() == true){
+            moveCursor(EDGE + 6, 0);
             cout << "\033[48;5;42m" << "You win !" << COLOR_RESET << endl;
             break;
         }  
@@ -283,8 +302,8 @@ void run_mine_sweeper(){
             sscanf(input, "\033[<%d;%d;%d", &button, &row, &col); // extract button number, column, and row
 
             button = input[3] - ' ';
+            row = input[5] - ' ' - 1 - 1; // minus the edge and the \n for foramtting
             col = (int)((input[4] - ' ' - 1) / 2);
-            row = input[5] - ' ' - 1 - 2; // minus the edge and the \n for foramtting
             // cout << "row: " << row << " col:" << col << endl;
         }
 
@@ -294,6 +313,7 @@ void run_mine_sweeper(){
         else if (row >= 0 && col >= 0 && row <= EDGE-1 && col <= EDGE-1){
             reveal_cell(row, col);
             if (KABOOM){
+                moveCursor(EDGE + 6, 0);
                 cout << "\033[48;5;200m" << "You lost!" << COLOR_RESET << endl;
                 break;
             }
@@ -302,20 +322,21 @@ void run_mine_sweeper(){
             continue;
 
         enableTerminalEcho(true);
-        print_board(GUESS_BOARD);
     }
+    enableTerminalEcho(true);
     enableICANON(true);
 }
 
 
 
 int main(){
-    printf("\033[8;14;60t");   // fix terminal height
     init();
     mine_generate();
+    system("clear");
+    
+    init_board(GUESS_BOARD);
     run_mine_sweeper();
+    
     cout << "\033[?1000l"; // disable mouse support
-
-    enableTerminalEcho(true);    
     return 0;
 }
