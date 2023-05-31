@@ -1,8 +1,8 @@
 
 # Clickable Minesweeper
 [Further explain](https://medium.com/@smefyb/clickable-minesweeper-game-a19dc2e1db64)  
-**An easy little game to practice c++ and ansi escape**  
-> Using ANSI escape, no ncurses.  
+**An easy little game to practice c++ and ansi escape(VT-100)**  
+> No ncurses.  
 
 #### TODO 
 * Fix the input issue, currently it only works on minefield smaller than $9 * 9$.
