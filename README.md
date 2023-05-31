@@ -17,7 +17,7 @@ Right click on grid to set flag, click on existing flag to disable it.
 
 ### Running
 Should work well on any terminal supporting color display and can listen to mouse clicks.  
-* Linux OS terminal should be fine
+* Linux terminal should be fine
 * Using Mac OS default terminal will have some minor issues
 # Colorful Mine Sweeper
 1. Choose difficulty and start the game  
