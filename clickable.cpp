@@ -332,8 +332,8 @@ void run_mine_sweeper(){
 int main(){
     init();
     mine_generate();
-    system("clear");
-    
+
+    printf("\033[H\033[2J");	// clear terminal
     init_board(GUESS_BOARD);
     run_mine_sweeper();
     
