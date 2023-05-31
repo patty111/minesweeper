@@ -2,8 +2,8 @@
 # Clickable Minesweeper
 [Further explain](https://medium.com/@smefyb/clickable-minesweeper-game-a19dc2e1db64)  
 **An easy little game to practice c++ and ansi escape**  
-> Using only ANSI escape, no ncurses.  
-Works on Linux system, some OS or CLI doesn't support listening to mouse click events  
+> Using ANSI escape, no ncurses.  
+
 #### TODO 
 * Fix the input issue, currently it only works on minefield smaller than $9 * 9$.
 * Add some decorations
@@ -13,7 +13,12 @@ Works on Linux system, some OS or CLI doesn't support listening to mouse click e
 Left click on grid to reveal.  
 Right click on grid to set flag, click on existing flag to disable it.
 
-![game running](screenshots/clickable.gif)
+![game running](screenshots/clickable.gif)  
+
+### Running
+Should work well on any terminal supporting color display and can listen to mouse clicks.  
+* Linux OS terminal should be fine
+* Using Mac OS default terminal will have some minor issues
 # Colorful Mine Sweeper
 1. Choose difficulty and start the game  
    
@@ -28,3 +33,5 @@ Right click on grid to set flag, click on existing flag to disable it.
 4. Flag all mines correctly to win the game  
 ![](screenshots/win.png)
 
+### Running
+Can run on any terminal supporting color display.
